@@ -8,3 +8,12 @@
 5. Tell Windows to open .seq files with CustomMusicStarter.bat (Double click on any .seq file and go from there)
 
 Now you should be able to double click a .seq file anywhere and it'll do all the steps automatically.
+
+The main directory should look like this:
+BizHawk-2.\*\\
+OoT-Randomizer\\
+Cosmetic.json
+CustomMusicStarter.bat
+CustomMusicStarter.py
+README.md
+settings.sav
