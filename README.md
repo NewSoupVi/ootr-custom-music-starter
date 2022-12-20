@@ -7,7 +7,7 @@
 4. Place the folder for any version of Bizhawk in the main directory.
 5. Tell Windows to open .seq files with CustomMusicStarter.bat (Double click on any .seq file and go from there)
 
-You might need to install some python libraries, idk
+*You might need to install some python libraries, idk, follow the error message and annoy me on Discord or sth*
 
 Now you should be able to double click a .seq file anywhere and it'll do all the steps automatically.
 
