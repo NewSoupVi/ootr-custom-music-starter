@@ -1,6 +1,6 @@
 # Instructions
 
-0. Have python 3 installed and added to path ("python xyz.py" needs to work. Might improve this in the future)
+0. Have python 3 installed and added to path ("python xyz.py" needs to work and refer to a Python 3 installation, not Python 2. Might improve this in the future)
 1. Download&unpack or clone this repo
 2. Download https://github.com/TestRunnerSRL/OoT-Randomizer and place it in ootr-custom-music-starter.
 3. Place a ZOOTDEC.z64 in the OoT-Randomizer folder. Generating any seed locally should create one, so you probably already have one somewhere.
