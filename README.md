@@ -9,11 +9,11 @@
 
 Now you should be able to double click a .seq file anywhere and it'll do all the steps automatically.
 
-The main directory should look like this:
-BizHawk-2.\*\\
-OoT-Randomizer\\
-Cosmetic.json
-CustomMusicStarter.bat
-CustomMusicStarter.py
-README.md
-settings.sav
+The main directory should look like this:<br/><br/>
+BizHawk-2.\*/<br/>
+OoT-Randomizer/<br/>
+Cosmetic.json<br/>
+CustomMusicStarter.bat<br/>
+CustomMusicStarter.py<br/>
+README.md<br/>
+settings.sav<br/>
