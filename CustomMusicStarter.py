@@ -62,7 +62,12 @@ with open(baseFolder + "\\settings.sav") as f:
 with open(metaFile) as f:
     string = f.readlines()
     string[0] = "Testsong\n"
-    string[2] = "bgm\n"
+    
+    if len(string) >= 3:
+        string[2] = "bgm\n"
+    else:
+        string[1] = string[1].strip() + "\n"
+        string.append("bgm\n")
     
     with open(musicFolder + "\\Testsong.meta", "w") as f2:
         f2.write("".join(string))
