@@ -1,4 +1,5 @@
 import sys
+import ModuleUpdate
 
 commandLengths = {
     b'\xD3': 1,
@@ -48,7 +49,12 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filepath = sys.argv[1]
     else:
-        raise ValueError("Not yet implemented: Open File Window")
+        import easygui
+
+        filepath = easygui.fileopenbox()
+        
+        if filepath is None:
+            raise RuntimeError("Please select a file.")
         
     verifyOnlyOneVolume(filepath)
         
