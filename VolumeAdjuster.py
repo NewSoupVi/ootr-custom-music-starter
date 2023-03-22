@@ -23,8 +23,9 @@ commandLengths = {
     b'\x9F': 2,
     b'\xD6': 2,
     b'\xDD': 1,
-    b'\xFD': 2,
+    b'\xFD': 1,
     b'\xFB': 2,
+    b'\x00': 0,
 }
 
 def verifyOnlyOneVolume(filepath):
