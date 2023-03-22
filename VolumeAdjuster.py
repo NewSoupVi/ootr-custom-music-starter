@@ -32,7 +32,6 @@ def verifyOnlyOneVolume(filepath):
 
     with open(filepath, "rb+") as f:
         while (byte := f.read(1)): 
-            print(byte)
             if byte == b'\xFF':
                 break
             elif byte == b'\xDB':
@@ -46,7 +45,6 @@ def verifyOnlyOneVolume(filepath):
                 else:
                     if byte == b'\xFD':
                         nextbyte = int.from_bytes(f.read(1), byteorder='big')
-                        print(nextbyte)
                         if nextbyte >= 0x80:
                             f.read(1)
                         continue
