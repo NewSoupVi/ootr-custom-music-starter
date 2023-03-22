@@ -25,7 +25,6 @@ commandLengths = {
     b'\xDD': 1,
     b'\xFD': 1,
     b'\xFB': 2,
-    b'\x00': 0,
 }
 
 def verifyOnlyOneVolume(filepath):
@@ -33,6 +32,7 @@ def verifyOnlyOneVolume(filepath):
 
     with open(filepath, "rb+") as f:
         while (byte := f.read(1)): 
+            print(byte)
             if byte == b'\xFF':
                 break
             elif byte == b'\xDB':
@@ -44,6 +44,12 @@ def verifyOnlyOneVolume(filepath):
                 if byte not in commandLengths:
                     raise ValueError("Unknown command: " + hex(int.from_bytes(byte, byteorder='big')))
                 else:
+                    if byte == b'\xFD':
+                        nextbyte = int.from_bytes(f.read(1), byteorder='big')
+                        print(nextbyte)
+                        if nextbyte >= 0x80:
+                            f.read(1)
+                        continue
                     f.read(commandLengths[byte])
 
 if __name__ == "__main__":
