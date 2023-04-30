@@ -80,6 +80,7 @@ if os.path.isfile(sequenceName + ".ootrs"):
 os.mkdir(sequenceName)
         
 for file in [metaFile, zbankFile, bankMetaFile, seqFile] + zsounds:
+    assert os.path.isfile(file), f"{file} could not be found, but is referenced in {metaFile}."
     shutil.copy(file, os.path.join(sequenceName, os.path.split(file)[1]))
     
     
