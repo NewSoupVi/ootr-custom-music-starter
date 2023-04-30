@@ -25,6 +25,12 @@ ootrFolder = baseFolder + "\\OoT-Randomizer"
 if not os.path.isdir(ootrFolder):
     raise ValueError(ootrFolder + " doesn't exist. Please download a local python installation of the randomizer.")
     
+with open(ootrFolder + "\\Music.py") as f:
+    if ".ootrs" in f.read():
+        assert isOotrs, "Your randomizer version does not support .seq + .meta anymore. You need a .ootrs."
+    else:
+        assert not isOotrs, "Your randomizer version does not support .ootrs yet. Please update to a version that does."
+    
 ootrRandomizer = ootrFolder + "\\OoTRandomizer.py"
 
 zootDec = ootrFolder + "\\ZOOTDEC.z64"
@@ -36,6 +42,11 @@ if not os.path.isfile(zootDec):
     raise ValueError("ZOOTDEC.z64 not found in the randomizer folder. If you don't have a ZOOTDEC.z64, running the randomizer and generating a seed once will create one.")
     
 musicFolder = ootrFolder + "\\data\\Music"
+
+potentialExistingFiles = [musicFolder + tail for tail in ["\\Testsong.ootrs", "\\Testsong.seq", "\\Testsong.meta"]]
+for potentialFile in potentialExistingFiles:
+    if os.path.isfile(potentialFile):
+        os.remove(potentialFile)
 
 if not os.path.isdir(musicFolder):
     raise ValueError(musicFolder + " not found.")
