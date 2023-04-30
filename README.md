@@ -5,7 +5,8 @@
 2. Download https://github.com/TestRunnerSRL/OoT-Randomizer and place it in ootr-custom-music-starter.
 3. Place a ZOOTDEC.z64 in the OoT-Randomizer folder. Generating any seed locally should create one, so you probably already have one somewhere.
 4. Place the folder for any version of Bizhawk in the main directory.
-5. Tell Windows to open .seq files with CustomMusicStarter.bat (Double click on any .seq file and go from there)
+5. Tell Windows to open .seq / .ootrs files with CustomMusicStarter.bat (Double click on any .seq file and go from there)
+6. If you are using .ootrs, you can also set ootrspacker.bat as the default program to open .seq files. This will let you auto-create .ootrs.
 
 *You might need to install some python libraries, idk, follow the error message or annoy me on Discord or sth*
 
