@@ -1,20 +1,22 @@
 import sys
 import os
 import shutil
+import zipfile
 from subprocess import Popen
 
 if len(sys.argv) < 2:
     raise ValueError("You need to open the .bat script with a file")
 
-seqFile = sys.argv[1]
+seqOrOotrsFile = sys.argv[1]
+isOotrs = ".ootrs" in seqOrOotrsFile
 
-if not os.path.isfile(seqFile):
+if not os.path.isfile(seqOrOotrsFile):
     raise ValueError(".seq file doesn't exist")
     
-metaFile = seqFile[:-4] + ".meta"
+metaFile = seqOrOotrsFile[:-4] + ".meta"
     
-if not os.path.isfile(metaFile):
-    raise ValueError(".meta file doesn't exist")
+if not isOotrs and not os.path.isfile(metaFile):
+    raise ValueError(".meta file doesn't exist / input file isn't an .ootrs")
     
 baseFolder = os.path.dirname(os.path.realpath(__file__))
 
@@ -58,21 +60,60 @@ with open(baseFolder + "\\settings.sav") as f:
     
     with open(ootrFolder + "\\settings.sav", "w") as f2:
         f2.write(string)
+
+if isOotrs:
+    extractedOotr = baseFolder + "\\Testsong"
+
+    if os.path.isdir(extractedOotr):
+        shutil.rmtree(extractedOotr)
         
-with open(metaFile) as f:
-    string = f.readlines()
-    string[0] = "Testsong\n"
+    if os.path.isfile(extractedOotr + ".zip"):
+        os.remove(extractedOotr + ".zip")
+        
     
-    if len(string) >= 3:
-        string[2] = "bgm\n"
-    else:
-        string[1] = string[1].strip() + "\n"
-        string.append("bgm\n")
+    if os.path.isfile(extractedOotr + ".ootrs"):
+        os.remove(extractedOotr + ".ootrs")
     
-    with open(musicFolder + "\\Testsong.meta", "w") as f2:
-        f2.write("".join(string))
-      
-shutil.copyfile(seqFile, musicFolder + "\\Testsong.seq")     
+    with zipfile.ZipFile(seqOrOotrsFile,"r") as zip_ref:
+        zip_ref.extractall(extractedOotr)
+    
+    metaFile = [extractedOotr + "\\" + file for file in os.listdir(extractedOotr) if file.endswith(".meta")]
+    assert len(metaFile) == 1, "There should be exactly 1 meta file in an .ootrs"
+    
+    metaFile = metaFile[0]
+    
+    with open(metaFile) as f:
+        string = f.readlines()
+        string[0] = "Testsong\n"
+    
+        if len(string) >= 3:
+            string[2] = "bgm\n"
+        else:
+            string[1] = string[1].strip() + "\n"
+            string.append("bgm\n")
+            
+    with open(metaFile, "w") as f:
+        f.write("".join(string))
+        
+    shutil.make_archive(extractedOotr, 'zip', extractedOotr)
+        
+    os.rename(extractedOotr + ".zip", extractedOotr + ".ootrs")
+    
+    shutil.copyfile(extractedOotr + ".ootrs", musicFolder + "\\Testsong.ootrs")
+else:
+    with open(metaFile) as f:
+        string = f.readlines()
+        string[0] = "Testsong\n"
+    
+        if len(string) >= 3:
+            string[2] = "bgm\n"
+        else:
+            string[1] = string[1].strip() + "\n"
+            string.append("bgm\n")
+    
+        with open(musicFolder + "\\Testsong.meta", "w") as f2:
+            f2.write("".join(string))
+    shutil.copyfile(seqOrOotrsFile, musicFolder + "\\Testsong.seq")
 
 command = 'python "' + os.path.abspath(ootrRandomizer) + '"'
 
