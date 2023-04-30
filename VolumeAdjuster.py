@@ -1,5 +1,8 @@
 import sys
 import ModuleUpdate
+import os
+import shutil
+import zipfile
 
 commandLengths = {
     b'\xD3': 1,
@@ -50,6 +53,39 @@ def verifyOnlyOneVolume(filepath):
                         continue
                     f.read(commandLengths[byte])
 
+def setupOotrs(filepath):
+    baseFolder = os.path.dirname(os.path.realpath(__file__))
+
+    extractedOotr = baseFolder + "\\Testsong"
+
+    if os.path.isdir(extractedOotr):
+        shutil.rmtree(extractedOotr)
+        
+    if os.path.isfile(extractedOotr + ".zip"):
+        os.remove(extractedOotr + ".zip")
+        
+    if os.path.isfile(extractedOotr + ".ootrs"):
+        os.remove(extractedOotr + ".ootrs")
+        
+    with zipfile.ZipFile(filepath,"r") as zip_ref:
+        zip_ref.extractall(extractedOotr)
+        
+    seqFile = [extractedOotr + "\\" + file for file in os.listdir(extractedOotr) if file.endswith(".seq")]
+    assert len(seqFile) == 1, "There should be exactly 1 meta file in an .ootrs"
+    
+    return seqFile[0]
+    
+def repackOotrs(originalFilePath):
+    baseFolder = os.path.dirname(os.path.realpath(__file__))
+
+    extractedOotr = baseFolder + "\\Testsong"
+
+    shutil.make_archive(extractedOotr, 'zip', extractedOotr)
+        
+    os.rename(extractedOotr + ".zip", extractedOotr + ".ootrs")
+    
+    shutil.copyfile(extractedOotr + ".ootrs", originalFilePath)
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         filepath = sys.argv[1]
@@ -60,6 +96,12 @@ if __name__ == "__main__":
         
         if filepath is None:
             raise RuntimeError("Please select a file.")
+            
+    isOotrs = filepath.endswith(".ootrs")
+    
+    if isOotrs:
+        ootrsFilePath = filepath
+        filepath = setupOotrs(filepath)
         
     verifyOnlyOneVolume(filepath)
         
@@ -83,4 +125,7 @@ if __name__ == "__main__":
         
         f.seek(-1, 1)
         f.write(newVolume)
+        
+    if isOotrs:
+        repackOotrs(ootrsFilePath)
 
