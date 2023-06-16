@@ -20,38 +20,6 @@ sequenceFolder = os.path.dirname(seqFile)
 assert os.path.isfile(metaFile), "Needs an associated .meta file."
 
 assert not (os.path.isfile(zbankFile) ^ os.path.isfile(bankMetaFile)), "If there is a .zbank file, there needs to be a .bankMeta file."
-
-removeZbankAndBankMetaLater = False
-
-if not os.path.isfile(zbankFile):
-    removeZbankAndBankMetaLater = True
-
-    #  create from vanilla banks
-    
-    vanilla_banks_dir = ""
-
-    baseFolder = os.path.dirname(os.path.realpath(__file__))
-    exclude = ["OoT-Randomizer"]
-    for root, dirs, files in os.walk(baseFolder, topdown=True):
-        dirs[:] = [d for d in dirs if d not in exclude]
-        for filename in files:    
-            if filename == "0a.bankmeta":
-                vanilla_banks_dir = root
-    
-    assert vanilla_banks_dir, "If you don't provide a .bankmeta and .zbank file, you'll need the vanilla banks in a folder called vanilla_banks in the Custom Music Starter directory."
-    
-    bank = ""
-    with open(metaFile, "r") as file:
-        bank = hex(int(file.readlines()[1].strip(), 16))[2:]
-                
-    if len(bank) == 1:
-        bank = "0" + bank
-            
-        zbank_file = os.path.join(vanilla_banks_dir, bank + ".zbank")
-        bankmeta_file = os.path.join(vanilla_banks_dir, bank + ".bankmeta")
-        
-        shutil.copy(zbank_file, zbankFile)
-        shutil.copy(bankmeta_file, bankMetaFile)
     
 zsounds = []
 with open(metaFile, "r") as f:
@@ -78,8 +46,12 @@ if os.path.isfile(sequenceName + ".ootrs"):
         os.remove(sequenceName + ".ootrs")
 
 os.mkdir(sequenceName)
+
+files = [metaFile, seqFile]
+if os.path.isfile(zbankFile):
+    files = [metaFile, zbankFile, bankMetaFile, seqFile] + zsounds
         
-for file in [metaFile, zbankFile, bankMetaFile, seqFile] + zsounds:
+for file in files:
     assert os.path.isfile(file), f"{file} could not be found, but is referenced in {metaFile}."
     shutil.copy(file, os.path.join(sequenceName, os.path.split(file)[1]))
     
@@ -95,7 +67,3 @@ if os.path.isdir(sequenceName):
     
 if os.path.isfile(sequenceName + ".zip"):
     os.remove(sequenceName + ".zip")
-        
-if removeZbankAndBankMetaLater:
-    os.remove(zbankFile)
-    os.remove(bankMetaFile)
